@@ -1,0 +1,154 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0px;
+
+    font-family: Arial, sans-serif;
+}
+
+.admin-dashboard {
+    padding: 20px;
+    padding-top: 800px;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    color: #224798;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 20px;
+    color: #224798;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+form input, form select {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+form button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #004494;
+}
+
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #224798;
+    color: white;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table td input, .table td select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.table td button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.table td button:hover {
+    background-color: #004494;
+}
+
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+
+    .admin-dashboard {
+        padding: 10px;
+    }
+
+    form input, form select {
+        padding: 8px;
+    }
+
+    .table th, .table td {
+        padding: 8px;
+    }
+
+    .table td button {
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-responsive {
+        overflow-x: scroll;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+
+    .admin-dashboard {
+        padding: 5px;
+    }
+
+    form input, form select {
+        padding: 6px;
+    }
+
+    .table th, .table td {
+        padding: 6px;
+    }
+
+    .table td button {
+        padding: 3px;
+    }
+}
+
+
+.user-list input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #007F37;
+    border-radius: 4px;
+}

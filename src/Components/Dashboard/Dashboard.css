@@ -1,0 +1,179 @@
+.body-dashboard{
+  position: fixed;
+  left: 0;
+  top:0;
+  margin-top:auto;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  min-height: 100vh;  /*min-height da osigura da je uvijek bar visina ekrana */
+  overflow-y: auto;  /*omogućava skrolovanje po Y osi */
+}
+
+.image-div{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+
+.heading-div{
+  position: relative;
+  width: 100%;
+  text-align: center;
+  background-color: #007F37;
+  color: white;
+  height: 7.5%;
+  margin: 0;
+  padding: 1px;
+}
+
+.button-logout {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px 0px;
+  background-color: #ff0808;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-logout:hover {
+  background-color: #690303;
+}
+
+.footer-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top;
+  text-align: center;
+  height: 7.5%;
+  margin: 0;
+  padding: 0;
+  margin-top: 20%;
+}
+
+.greeting-message-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top;
+  text-align: center;
+  height: 7.5%;
+  margin: 0;
+  padding: 0;
+}
+
+.task-heading{
+  display: flex;
+  vertical-align: top;
+  height: 10%;
+  margin: 0;
+  padding: 0;
+}
+
+.card-div{
+  display: flex;
+  vertical-align: top;
+  height: 7.5%;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+.button-logout-mobile{
+  padding: 10px;
+  background-color: #ff0808;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.task-slider .slick-slide {
+    display: flex;
+    justify-content: space-between; /* Razmak između taskova */
+    padding: 10px; /* Prostor oko taskova */
+}
+
+.task-slider {
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.task-slider .slick-slide {
+    display: flex;
+    justify-content: center; /* Centriranje taskova */
+    padding: 10px;
+}
+
+.task-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+    text-align: left;
+    height: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Postavljanje širine taska */
+}
+
+.slick-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: gray; /* Dodajte pozadinu strelicama, ako je potrebno */
+    border-radius: 50%; /* Zaokružite strelice */
+    padding: 10px;
+}
+
+.slick-prev {
+    left: -40px; /* Pomaknite lijevu strelicu lijevo */
+}
+
+.slick-next {
+    right: -40px; /* Pomaknite desnu strelicu desno */
+}
+
+
+.complaint-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.complaint-card h3 {
+    color: #224798;
+}
+
+.complaint-card p {
+    margin: 5px 0;
+}
+
+.complaint-card button {
+    margin-top: 10px;
+    background-color: #007F37;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.complaint-card button:hover {
+    background-color: #005F27;
+}
