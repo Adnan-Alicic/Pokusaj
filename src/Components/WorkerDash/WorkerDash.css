@@ -1,142 +1,73 @@
-.body-dashboard{
-  position: fixed;
-  left: 0;
-  top:0;
-  margin-top:auto;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  min-height: 100vh;  /*min-height da osigura da je uvijek bar visina ekrana */
-  overflow-y: auto;  /*omogućava skrolovanje po Y osi */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
-.image-div{
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: white;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-
-.heading-div{
-  position: relative;
-  width: 100%;
-  text-align: center;
-  background-color: #007F37;
-  color: white;
-  height: 7.5%;
-  margin: 0;
-  padding: 1px;
-}
-
-#h2-ds {
-    color: #224798;
-    text-align: center;
-    font-size: 24px;
-}
-
-.button-logout {
+.pagination button {
     background-color: #224798;
     color: white;
     border: none;
+    margin: 0 5px;
+    padding: 10px 20px;
     cursor: pointer;
-    text-align: center;
+    border-radius: 5px;
 }
 
-.greeting-message-div {
-    margin: 10px 0;
+.pagination button.active {
+    background-color: #1b3e6e;
 }
 
-.task-slider .slick-slide {
+.pagination button:hover {
+    background-color: #1b3e6e;
+}
+.complaint-item button {
+  margin-top: 10px;
+  background-color: #007F37;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px; /* Smanjite padding za manji gumb */
+}
+
+.btn-done{
+    margin-top: 10px;
+    background-color: #007F37;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px;
+}
+.task-list {
     display: flex;
-    justify-content: space-between; /* Razmak između taskova */
-    padding: 10px; /* Prostor oko taskova */
-}
-
-.task-slider {
+    justify-content: center; /* Center the task items horizontally */
+    flex-wrap: wrap; /* Ensure tasks wrap to the next row if needed */
+    gap: 20px; /* Add some space between the tasks */
     padding: 20px;
-    margin: 20px 0;
-}
-
-.task-slider .slick-slide {
-    display: flex;
-    justify-content: center; /* Centriranje taskova */
-    padding: 10px;
 }
 
 .task-item {
-    background-color: #f8f9fa;
+    background-color: #d9d9d9d9;
+    text-align: left;
+    width: 300px; /* Širina kartice */
+    margin: 10px;
     border: 1px solid #dee2e6;
     padding: 15px;
-    margin: 10px;
     border-radius: 5px;
-    text-align: left;
-    height: auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Postavljanje širine taska */
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-wrap: break-word;  /* Osigurava da se dugi tekst lomi */
+    overflow: hidden;       /* Sprječava prelazak sadržaja izvan kartice */
 }
 
-.slick-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
-    background: gray; /* Dodajte pozadinu strelicama, ako je potrebno */
-    border-radius: 50%; /* Zaokružite strelice */
-    padding: 10px;
-}
-
-.slick-prev {
-    left: -40px; /* Pomaknite lijevu strelicu lijevo */
-}
-
-.slick-next {
-    right: -40px; /* Pomaknite desnu strelicu desno */
-}
-
-.card-div {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.button-add {
-    background-color: #224798;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-.button-add:hover {
-    background-color: #1b3e6e;
-}
-
-.task-heading h3 {
-    margin-left: 16%;
-    color: #224798;
-}
-
-.slick-prev, .slick-next {
-    background-color: #224798;
-    border-radius: 50%;
-    padding: 5px;
-    color: white;
-    z-index: 1;
-    width: 40px;
-    height: 40px;
-}
-
-.slick-prev:hover, .slick-next:hover {
-    background-color: #1b3e6e;
-}
-
-.slick-prev::before, .slick-next::before {
-    color: white;
-    font-size: 20px;
+.task-item p {
+    margin: 0px;  /* Manji razmak između paragrafa */
+    white-space: normal;  /* Osigurava da se tekst lomi u novi red */
+    overflow-wrap: break-word;  /* Prelom duge riječi na novi red */
 }

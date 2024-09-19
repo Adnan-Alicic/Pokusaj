@@ -94,6 +94,9 @@
     height: 20px;
     margin-left: 3%;
     width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
 

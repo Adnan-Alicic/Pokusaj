@@ -6,50 +6,11 @@ import { useState, useEffect } from 'react';
 import { BrowserView, MobileView } from "react-device-detect";
 import AddEditTask from '../Add-Edit-Task/Add-Edit-Task';
 import ReportIssue from '../Report-Issue/Report-Issue';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
-
-function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-        <FaArrowRight
-            className={className}
-            style={{ 
-                ...style, 
-                display: 'block', 
-                color: 'gray', 
-                fontSize: '24px',
-                position: 'absolute',
-                top: '50%',  
-                right: '0px',  
-                transform: 'translateY(-50%)'
-            }}
-            onClick={onClick}
-        />
-    );
-}
-
-function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-        <FaArrowLeft
-            className={className}
-            style={{ 
-                ...style, 
-                display: 'block', 
-                color: 'gray', 
-                fontSize: '24px',
-                position: 'absolute',  
-                top: '50%',  
-                left: '0px',  
-                transform: 'translateY(-50%)'
-            }}
-            onClick={onClick}
-        />
-    );
-}
+// Uklonili smo Slider i sve njegove dependencije
+// import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css"; 
+// import "slick-carousel/slick/slick-theme.css";
+// import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 function DashBoard() {
     const [role, setRole] = useState('');
@@ -59,6 +20,9 @@ function DashBoard() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [loadingComplaints, setLoadingComplaints] = useState(true);
+
+    const [currentPage, setCurrentPage] = useState(1); // Pagination state
+    const tasksPerPage = 3; // Number of tasks per page
 
     useEffect(() => {
         const userRole = localStorage.getItem('userRole');
@@ -108,27 +72,34 @@ function DashBoard() {
         fetchComplaints();
     }, []);
 
-     // Sortiranje taskova prvo po ovjeri, zatim po statusu i prioritetu
+    // Sortiranje taskova prvo po ovjeri, zatim po statusu i prioritetu
     const sortedTasks = tasks.sort((a, b) => {
-        // Prvo sortiraj po tome da li je task ovjeren ili ne
         if (a.verifikacija !== b.verifikacija) {
-            return a.verifikacija ? 1 : -1; // Neovjereni idu prije ovjerenih
+            return a.verifikacija ? 1 : -1;
         }
-        // Zatim sortiraj po statusu: "U toku" ide ispred "Završeno"
         if (a.status !== b.status) {
             return a.status === 'U toku' ? 1 : -1;
         }
-        // Ako je status isti, sortiraj po prioritetu: Urgentno, Visoki, Srednji, Niski
         const priorities = ['Urgentno', 'Visoki', 'Srednji', 'Niski'];
         return priorities.indexOf(a.prioritet) - priorities.indexOf(b.prioritet);
     });
 
+    // Logic for displaying tasks per page
+    const indexOfLastTask = currentPage * tasksPerPage;
+    const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+    const currentTasks = sortedTasks.slice(indexOfFirstTask, indexOfLastTask);
+
+    // Change page
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    // Total number of pages
+    const totalPages = Math.ceil(sortedTasks.length / tasksPerPage);
+
     const handleCreateTask = (complaint) => {
         setSelectedComplaint(complaint);
-        setModalOpen(true); // Otvaramo modal ali ne kreiramo task odmah
+        setModalOpen(true);
     };
 
-    // Funkcija koja se poziva nakon što je task stvarno kreiran
     const onTaskCreated = async (complaintId) => {
         try {
             const response = await fetch(`http://localhost:3000/api/report-issue/create-task/${complaintId}`, {
@@ -139,7 +110,7 @@ function DashBoard() {
             });
 
             if (response.ok) {
-                setComplaints(complaints.filter(c => c.id !== complaintId)); // Ukloni prijavu s liste
+                setComplaints(complaints.filter(c => c.id !== complaintId));
                 alert('Task je uspješno kreiran i prijava smetnji je ažurirana!');
             } else {
                 alert('Došlo je do greške prilikom kreiranja taska.');
@@ -150,40 +121,24 @@ function DashBoard() {
         }
     };
 
-
-   
-
     const handleVerifyTask = async (task) => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/tasks/verify-task/${task.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+        try {
+            const response = await fetch(`http://localhost:3000/api/tasks/verify-task/${task.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-    if (response.ok) {
-      alert('Task je uspješno ovjeren!');
-      
-      // Filtriraj prijave smetnji da ukloniš ovjerene
-      setComplaints(complaints.filter(c => c.id !== task.prijavaSmetnjiId));
-    } else {
-      alert('Došlo je do greške prilikom ovjere taska.');
-    }
-  } catch (error) {
-    console.error('Greška prilikom ovjere taska:', error);
-  }
-};
-
-
-    const sliderSettings = {
-        dots: true,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        nextArrow: <SampleNextArrow />, 
-        prevArrow: <SamplePrevArrow />, 
+            if (response.ok) {
+                alert('Task je uspješno ovjeren!');
+                setComplaints(complaints.filter(c => c.id !== task.prijavaSmetnjiId));
+            } else {
+                alert('Došlo je do greške prilikom ovjere taska.');
+            }
+        } catch (error) {
+            console.error('Greška prilikom ovjere taska:', error);
+        }
     };
 
     return (
@@ -196,7 +151,9 @@ function DashBoard() {
 
                     <div className='heading-div'>
                         <h2 id='h2-ds'>Helpdesk</h2>
-                        <Button className='button-logout' to="/index" size="lg" tag={Link}>Logout</Button>
+                        <Button style={{ textAlign: "center", textDecoration: "none", width: "10%" }} className='button-logout' to="/index"
+                        size="lg"
+                        tag={Link}>Logout</Button>
                     </div>
 
                     <div className='greeting-message-div'>
@@ -210,76 +167,91 @@ function DashBoard() {
                         </Button>
                     </div>
 
-                    <div className='task-slider'>
-                        {tasks.length > 0 ? (
-                            <Slider {...sliderSettings}>
-                                {tasks.map(task => (
-                                    <div key={task.id} className='task-item'>
-                                        <h3>{task.naziv_taska}</h3>
-                                        <p>{task.tekst_taska}</p>
-                                        <p><strong>Prioritet:</strong> {task.prioritet}</p>
-                                        <p><strong>Radnik:</strong> {task.User ? `${task.User.firstname} ${task.User.lastname}` : 'N/A'}</p>
-                                        <p><strong>Status:</strong> {task.status}</p>
-                                        <p><strong>Verifikacija:</strong> {task.verifikacija ? 'Ovjereno' : 'Nije ovjereno'}</p>
+                    <div className='task-list'>
+                        {currentTasks.length > 0 ? (
+                            currentTasks.map(task => (
+                                <div key={task.id} className='task-item'>
+                                    <h3>{task.naziv_taska}</h3>
+                                    <p>{task.tekst_taska}</p>
+                                    <p><strong>Prioritet:</strong> {task.prioritet}</p>
+                                    <p><strong>Radnik:</strong> {task.User ? `${task.User.firstname} ${task.User.lastname}` : 'N/A'}</p>
+                                    <p><strong>Status:</strong> {task.status}</p>
+                                    <p><strong>Verifikacija:</strong> {task.verifikacija ? 'Ovjereno' : 'Nije ovjereno'}</p>
 
-                                        {task.status === 'Završeno' && !task.verifikacija && (
-                                        <Button
-                                            onClick={async () => {
-                                                const response = await fetch(`http://localhost:3000/api/tasks/verify-task/${task.id}`, {
-                                                    method: 'PUT',
-                                                    headers: {
-                                                        'Content-Type': 'application/json',
-                                                    },
-                                                });
+                                    {task.status === 'Završeno' && !task.verifikacija && (
+                                    <Button className='btn-ovjera'
+                                        onClick={async () => {
+                                            const response = await fetch(`http://localhost:3000/api/tasks/verify-task/${task.id}`, {
+                                                method: 'PUT',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                            });
 
-                                                if (response.ok) {
-                                                    alert('Task je uspješno ovjeren!');
-                                                    setTasks(tasks.map(t => t.id === task.id ? { ...t, verifikacija: true } : t)); // Ažuriraj task u stanju
-                                                } else {
-                                                    alert('Došlo je do greške prilikom verifikacije taska.');
-                                                }
-                                            }}
-                                        >
-                                            Ovjeri
-                                        </Button>
-                                        )}
-                                    </div>
-                                ))}
-                            </Slider>
+                                            if (response.ok) {
+                                                alert('Task je uspješno ovjeren!');
+                                                setTasks(tasks.map(t => t.id === task.id ? { ...t, verifikacija: true } : t));
+                                            } else {
+                                                alert('Došlo je do greške prilikom verifikacije taska.');
+                                            }
+                                        }}
+                                    >
+                                        Ovjeri
+                                    </Button>
+                                    )}
+                                </div>
+                            ))
                         ) : (
                             <p>Nema taskova za prikaz.</p>
                         )}
                     </div>
-                    <div>
-                        <h2>Prijave Smetnji</h2>
-                        <div className='complaints-slider'>
-                            {/* Prikaz loading statusa dok se podaci učitavaju */}
-                            {loadingComplaints ? (
-                                <p>Loading prijave smetnji...</p>
-                            ) : complaints.length > 0 ? (
-                                <Slider {...sliderSettings}>
-                                    {complaints
-                                        .sort((a, b) => a.hasTask - b.hasTask) 
-                                        .map(complaint => (
-                                            <div key={complaint.id} className='complaint-item'>
-                                                <h3>{complaint.opis}</h3>
-                                                <p><strong>Sektor:</strong> {complaint.sektor}</p>
-                                                <p><strong>Ime:</strong> {complaint.ime}</p>
-                                                <p><strong>Email:</strong> {complaint.email}</p>
-                                                {complaint.hasTask ? (
-                                                    <p style={{ color: 'green' }}>Task kreiran</p>
-                                                ) : (
-                                                    <Button onClick={() => handleCreateTask(complaint)}>Kreiraj Task</Button>
-                                                )}
-                                            </div>
-                                        ))}
-                                </Slider>
-                            ) : (
-                                <p>Nema prijava smetnji za prikaz.</p>
-                            )}
-                        </div>
-                    </div>
+
                     
+                    {/* Pagination */}
+                    <div className="pagination">
+                        {[...Array(totalPages).keys()].map((page) => (
+                            <Button
+                                key={page + 1}
+                                onClick={() => paginate(page + 1)}
+                                className={currentPage === page + 1 ? 'active' : ''}
+                            >
+                                {page + 1}
+                            </Button>
+                        ))}
+                    </div>
+
+                    <div className='task-heading'>
+                        <h3 style={{ margin: "10px 0px 0px 16%", color: "#ff0808" }}>Prijave </h3>
+
+                    </div>
+
+                    
+
+                    <div className='complaints-list'>
+    {loadingComplaints ? (
+        <p>Loading prijave smetnji...</p>
+    ) : complaints.length > 0 ? (
+        complaints
+            .sort((a, b) => a.hasTask - b.hasTask) 
+            .map(complaint => (
+                <div key={complaint.id} className='complaint-item'>
+                    <h3>{complaint.opis}</h3>
+                    <p><strong>Sektor:</strong> {complaint.sektor}</p>
+                    <p><strong>Ime:</strong> {complaint.ime}</p>
+                    <p><strong>Email:</strong> {complaint.email}</p>
+                    {complaint.hasTask ? (
+                        <p style={{ color: 'green' }}>Task kreiran</p>
+                    ) : (
+                        <Button onClick={() => handleCreateTask(complaint)}>Kreiraj Task</Button>
+                    )}
+                </div>
+            ))
+    ) : (
+        <p>Nema prijava smetnji za prikaz.</p>
+    )}
+</div>
+
+
 
                     {role === 'Sector Manager' && (
                         <div className='footer-div'>
@@ -324,14 +296,13 @@ function DashBoard() {
                     defaultData={selectedComplaint ? {
                         sektor: selectedComplaint.sektor,
                         opis: selectedComplaint.opis,
-                        prijavaId: selectedComplaint.id // Provjeri da je ID prisutan i točan
+                        prijavaId: selectedComplaint.id
                     } : null}
                     onTaskCreated={() => {
-                        // Funkcija koja će ažurirati prijave smetnji kada je task uspješno kreiran
                         setComplaints(complaints => complaints.map(c => 
                             c.id === selectedComplaint.id ? { ...c, hasTask: true } : c
                         ));
-                        setModalOpen(false); // Zatvaramo modal nakon uspješnog kreiranja taska
+                        setModalOpen(false);
                     }}
                 />
             )}

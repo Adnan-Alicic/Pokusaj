@@ -1,16 +1,16 @@
-.body-dashboard{
+.body-dashboard {
   position: fixed;
   left: 0;
-  top:0;
-  margin-top:auto;
+  top: 0;
+  margin-top: auto;
   width: 100%;
   height: 100%;
   background-color: white;
-  min-height: 100vh;  /*min-height da osigura da je uvijek bar visina ekrana */
-  overflow-y: auto;  /*omogućava skrolovanje po Y osi */
+  min-height: 100vh; /* Osigurava minimalnu visinu ekrana */
+  overflow-y: auto; /* Omogućava skrolovanje po Y osi */
 }
 
-.image-div{
+.image-div {
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -20,8 +20,7 @@
   display: flex;
 }
 
-
-.heading-div{
+.heading-div {
   position: relative;
   width: 100%;
   text-align: center;
@@ -49,7 +48,7 @@
   background-color: #690303;
 }
 
-.footer-div{
+.footer-div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,10 +57,10 @@
   height: 7.5%;
   margin: 0;
   padding: 0;
-  margin-top: 20%;
+  margin-top: 1%;
 }
 
-.greeting-message-div{
+.greeting-message-div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,15 +71,15 @@
   padding: 0;
 }
 
-.task-heading{
+.task-heading {
   display: flex;
   vertical-align: top;
-  height: 10%;
+  height: 5%;
   margin: 0;
   padding: 0;
 }
 
-.card-div{
+.card-div {
   display: flex;
   vertical-align: top;
   height: 7.5%;
@@ -88,92 +87,119 @@
   padding: 0;
 }
 
+/* Uklanjanje starih stilova slajdera */
+.task-slider, .task-slider .slick-slide {
+  display: none; /* Sakrij sve stilove slajdera */
+}
+
+/* Stilovi za task-item */
+.task-item {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: left;
+  height: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Postavite širinu na 100% za bolju prilagodbu */
+}
+
+/* Stilovi za complaints-list */
+.complaints-list {
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
 
 
-.button-logout-mobile{
-  padding: 10px;
-  background-color: #ff0808;
+
+/* Stilovi za complaint-item */
+.complaint-item {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: left;
+  height: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 300px; /* Postavite širinu na 100% za bolju prilagodbu */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Stilovi za complaint-item koji odgovaraju veličini task-item */
+
+
+/* Stilovi za complaint-item h3 */
+.complaint-item h3 {
+  color: #224798;
+  font-size: 1.2em; /* Smanjite veličinu fonta za naslov */
+}
+
+/* Stilovi za complaint-item p */
+.complaint-item p {
+   /* Smanjite margin za manje razmake između stavki */
+}
+
+/* Stilovi za complaint-item button */
+.complaint-item button {
+  margin-top: 10px;
+  background-color: #007F37;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  padding: 5px 10px; /* Smanjite padding za manji gumb */
+  align-self: center;
 }
 
-.task-slider .slick-slide {
-    display: flex;
-    justify-content: space-between; /* Razmak između taskova */
-    padding: 10px; /* Prostor oko taskova */
-}
-
-.task-slider {
-    padding: 20px;
-    margin: 20px 0;
-}
-
-.task-slider .slick-slide {
-    display: flex;
-    justify-content: center; /* Centriranje taskova */
-    padding: 10px;
-}
-
-.task-item {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 5px;
-    text-align: left;
-    height: auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Postavljanje širine taska */
-}
-
-.slick-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
-    background: gray; /* Dodajte pozadinu strelicama, ako je potrebno */
-    border-radius: 50%; /* Zaokružite strelice */
-    padding: 10px;
-}
-
-.slick-prev {
-    left: -40px; /* Pomaknite lijevu strelicu lijevo */
-}
-
-.slick-next {
-    right: -40px; /* Pomaknite desnu strelicu desno */
+.complaint-item button:hover {
+  background-color: #005F27;
 }
 
 
-.complaint-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 10px;
-    text-align: left;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Stilovi za paginaciju */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.complaint-card h3 {
-    color: #224798;
+.pagination button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #224798;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-.complaint-card p {
-    margin: 5px 0;
+.btn-ovjera{
+  background-color: #007F37;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px; /* Smanjite padding za manji gumb */
+  align-self: center;
+
 }
 
-.complaint-card button {
-    margin-top: 10px;
-    background-color: #007F37;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.btn-ovjera:hover {
+  background-color: #005F27;
 }
 
-.complaint-card button:hover {
-    background-color: #005F27;
+.pagination button.active {
+  background-color: #1e5c9c;
+}
+
+.pagination button:hover {
+  background-color: #1a4879;
 }
