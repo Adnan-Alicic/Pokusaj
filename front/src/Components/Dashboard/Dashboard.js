@@ -20,7 +20,8 @@ function DashBoard() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [loadingComplaints, setLoadingComplaints] = useState(true);
-
+    const [user, setUser] = useState({ firstname: '', lastname: '', sector: '' }); // Korisnički podaci
+    const [workers, setWorkers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // Pagination state
     const tasksPerPage = 3; // Number of tasks per page
 
@@ -30,6 +31,12 @@ function DashBoard() {
         if (userRole !== 'Sector Manager' && userRole !== 'User') {
             navigate('/index');
         }
+        const userData = JSON.parse(localStorage.getItem('userData')); // Pretpostavimo da je ulogovani korisnik sačuvan
+        console.log("Korisnički podaci iz localStorage:", userData);
+        if (userData) {
+            setUser(userData); // Postavi ime, prezime i sektor
+        }
+
     }, [navigate]);
 
     useEffect(() => {
@@ -141,6 +148,7 @@ function DashBoard() {
         }
     };
 
+
     return (
         <>
             <BrowserView>
@@ -157,7 +165,7 @@ function DashBoard() {
                     </div>
 
                     <div className='greeting-message-div'>
-                        <h2 style={{ textAlign: "center", color: "#224798" }}>Dobrodošao, korisnik</h2>
+                        <h2 style={{ textAlign: "center", color: "#224798" }}>Dobrodošao, {user.firstname} {user.lastname} ({user.sector})</h2>
                     </div>
 
                     <div className='task-heading'>
@@ -166,6 +174,7 @@ function DashBoard() {
                             <img style={{width:"25%", height:"100%"}} src="Plus-icon.png" alt="SarajevoGas Logo" />
                         </Button>
                     </div>
+                    
 
                     <div className='task-list'>
                         {currentTasks.length > 0 ? (
@@ -297,15 +306,24 @@ function DashBoard() {
                         sektor: selectedComplaint.sektor,
                         opis: selectedComplaint.opis,
                         prijavaId: selectedComplaint.id
-                    } : null}
+                    } : {
+                        sektor: user.sector,  // Koristi sektor ulogovanog korisnika kada nema prijave
+                        opis: '',  // Prazan opis kada nema prijave
+                        prijavaId: null  // Nema prijave smetnje
+                    }}
+                    workers={workers}  // Prosljeđivanje radnika u modal
                     onTaskCreated={() => {
-                        setComplaints(complaints => complaints.map(c => 
-                            c.id === selectedComplaint.id ? { ...c, hasTask: true } : c
-                        ));
+                        // Ažuriranje prijava, samo ako postoji selectedComplaint
+                        if (selectedComplaint) {
+                            setComplaints(complaints => complaints.map(c => 
+                                c.id === selectedComplaint.id ? { ...c, hasTask: true } : c
+                            ));
+                        }
                         setModalOpen(false);
                     }}
                 />
             )}
+
         </>
     );
 }

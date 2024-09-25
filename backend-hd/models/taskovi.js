@@ -20,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        sector: { // Dodajemo novo polje za sektor
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         userId: {
             type: DataTypes.INTEGER,
             references: {
@@ -32,9 +28,13 @@ module.exports = (sequelize, DataTypes) => {
             },
             allowNull: false,
         },
+        sector: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         verifikacija: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false, // Pretpostavljamo da task nije verifikovan na početku
+            defaultValue: false,
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -47,15 +47,23 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         }
     }, {
-        tableName: 'Taskovi',
-        freezeTableName: true, // Sprječava Sequelize da mijenja ime tabele
-        timestamps: true, // Automatski će raditi sa `createdAt` i `updatedAt` kolonama
-
+        tableName: 'Taskovi', // Tačno ime tabele
+        freezeTableName: true, // Sprječava automatsko mijenjanje imena tabele
     });
 
     Taskovi.associate = function(models) {
         Taskovi.belongsTo(models.User, { foreignKey: 'userId', as: 'User' });
     };
+
+    // Automatsko postavljanje sektora
+    Taskovi.beforeCreate(async(task, options) => {
+        const user = await sequelize.models.User.findByPk(task.userId);
+        if (user && user.sector) {
+            task.sector = user.sector; // Automatski postavi sektor
+        } else {
+            throw new Error('Korisnik nema definisan sektor.');
+        }
+    });
 
     return Taskovi;
 };

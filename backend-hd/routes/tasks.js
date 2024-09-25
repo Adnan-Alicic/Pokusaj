@@ -118,22 +118,26 @@ router.put('/complete-task/:id', async(req, res) => {
         router.put('/complete-task/:id', async(req, res) => {
             try {
                 const taskId = req.params.id;
+                console.log('Primljen taskId:', taskId);
+
+                // Pronađi task na osnovu ID-a
                 const task = await db.Taskovi.findByPk(taskId);
 
+                // Provjeri da li task postoji
                 if (!task) {
+                    console.log('Task sa ID-jem', taskId, 'nije pronađen.');
                     return res.status(404).json({ message: 'Task nije pronađen' });
                 }
 
-                if (!task.sector) {
-                    return res.status(400).json({ message: 'Task nema definisan sektor' });
-                }
+                console.log('Task pronađen:', task);
 
+                // Ažuriraj status na "Završeno"
                 task.status = 'Završeno';
                 await task.save();
 
                 // Pronađi radnika koji je završio task
                 const user = await db.Users.findByPk(task.userId);
-                if (!userser) {
+                if (!user) {
                     console.log('Korisnik nije pronađen');
                     return res.status(404).json({ message: 'Korisnik nije pronađen' });
                 }
@@ -173,25 +177,29 @@ router.put('/complete-task/:id', async(req, res) => {
         // Ruta za kreiranje novog taska
         router.post('/create-task', async(req, res) => {
             try {
-                const { prijavaSmetnjiId, sifra_taska, naziv_taska, tekst_taska, prioritet, userId } = req.body;
+                const { naziv_taska, tekst_taska, prioritet, sector, userId, prijavaSmetnjiId } = req.body;
 
-                // Pronađi radnika da bi dohvatio sektor
-                const radnik = await db.User.findByPk(userId);
-                if (!radnik || !radnik.sector) {
-                    return res.status(400).json({ message: 'Radnik nema definisan sektor' });
+                // Provjeri da li backend prima sector iz requesta
+                console.log('Primljeni podaci sa frontenda:', req.body);
+                console.log('Sector primljen:', sector); // Provjeri da li sector dolazi
+
+                // Provjeri da li je sector prazan
+                if (!sector) {
+                    return res.status(400).json({ message: 'Sektor ne može biti prazan.' });
                 }
 
-                // Kreiranje novog taska sa sektorom
+                // Kreiraj task
                 const newTask = await db.Taskovi.create({
-                    prijavaSmetnjiId,
-                    sifra_taska,
                     naziv_taska,
                     tekst_taska,
                     prioritet,
-                    status: 'U toku',
+                    sector, // Ovo polje mora biti ispravno poslano iz frontenda
                     userId,
-                    sector: radnik.sector // Dodaj sektor radnika u task
+                    status: 'U toku',
+                    prijavaSmetnjiId
                 });
+
+                console.log('Novi task kreiran:', newTask);
 
                 res.json(newTask);
             } catch (error) {
@@ -199,7 +207,6 @@ router.put('/complete-task/:id', async(req, res) => {
                 res.status(500).json({ message: 'Greška na serveru' });
             }
         });
-
 
 
         // Ruta za dohvaćanje taskova specifičnih za određenog korisnika
@@ -283,6 +290,12 @@ router.put('/complete-task/:id', async(req, res) => {
         task.status = 'Završeno';
         await task.save();
 
+        // Pronađi radnika koji je završio task
+        const user = await db.User.findByPk(task.userId); // Pretpostavljam da task ima polje userId
+        if (!user) {
+            return res.status(404).json({ message: 'Radnik nije pronađen' });
+        }
+
         // Pronađi šefa sektora kojem treba poslati email
         const sectorManager = await db.User.findOne({
             where: {
@@ -293,7 +306,7 @@ router.put('/complete-task/:id', async(req, res) => {
 
         if (sectorManager) {
             const subject = `Task je završen: ${task.sifra_taska}`;
-            const text = `Radnik je završio task: "${task.naziv_taska}" sa šifrom: ${task.sifra_taska}. Molimo da ga ovjerite.`;
+            const text = `Kolega ${user.firstname} ${user.lastname} je završio task: "${task.naziv_taska}" sa šifrom: ${task.sifra_taska}. Molimo da ga ovjerite.`;
 
             // Pošalji email šefu sektora
             await sendEmail(sectorManager.email, subject, text);

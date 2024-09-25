@@ -58,32 +58,38 @@ function AddEditTask({ isOpen, toggle, defaultData, onTaskCreated }) { // Primam
 
     const userId = selectedWorker.id; // Dobij userId radnika
 
-    // Provjera da li defaultData ima prijavaId
-    if (!defaultData || !defaultData.prijavaId) {
-        Swal.fire('Greška', 'Prijava smetnji nije pravilno učitana.', 'error');
-        return;
-    }
+    // Provjeri da li sektor postoji
+    console.log('Sector koji se šalje:', sector);
 
     try {
+        // Priprema tijela zahtjeva
+        const body = {
+            naziv_taska: title,
+            tekst_taska: description,
+            prioritet: priority,
+            sifra_taska, // Dodaj šifru taska
+            userId, // Dodaj ID radnika
+            sector, // Dodaj sektor
+            status,
+        };
+
+        // Ako postoji prijava smetnji, dodaj prijavaSmetnjiId u tijelo zahtjeva
+        if (defaultData && defaultData.prijavaId) {
+            body.prijavaSmetnjiId = defaultData.prijavaId;
+        }
+
+        // Slanje zahtjeva za kreiranje taska
         const response = await fetch('http://localhost:3000/api/tasks/create-task', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ 
-                naziv_taska: title,
-                tekst_taska: description,
-                prioritet: priority,
-                sifra_taska, // Dodaj šifru taska
-                userId, // Dodaj ID radnika
-                status,
-                prijavaSmetnjiId: defaultData.prijavaId // Koristimo ID prijave smetnji
-            }),
+            body: JSON.stringify(body),
         });
 
         if (response.ok) {
-            Swal.fire('Uspjeh!', 'Task je uspješno kreiran i email je poslan radniku!', 'success');
-            onTaskCreated(defaultData.prijavaId); // Pozovi funkciju kako bi ažurirao prijave na parent komponenti
+            Swal.fire('Uspjeh!', 'Task je uspješno kreiran!', 'success');
+            onTaskCreated(defaultData ? defaultData.prijavaId : null); // Ažuriraj prijave na parent komponenti
             toggle(); // Zatvori modal nakon uspješnog kreiranja taska
         } else {
             Swal.fire('Greška', 'Došlo je do greške prilikom kreiranja taska.', 'error');
@@ -93,6 +99,7 @@ function AddEditTask({ isOpen, toggle, defaultData, onTaskCreated }) { // Primam
         Swal.fire('Greška', 'Došlo je do greške prilikom slanja taska.', 'error');
     }
 };
+
 
 
   return (

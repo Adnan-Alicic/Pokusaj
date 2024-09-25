@@ -29,6 +29,14 @@ function Login() {
                 localStorage.setItem('userId', data.user.id);  // Ispravno postavljanje userId
                 console.log('Sačuvan korisnički ID:', localStorage.getItem('userId'));
 
+                 // Sačuvaj korisničke podatke (ime, prezime, sektor)
+                localStorage.setItem('userData', JSON.stringify({
+                    firstname: data.user.firstname,
+                    lastname: data.user.lastname,
+                    sector: data.user.sector || 'Nije definisan sektor'
+                }));
+                console.log('Sačuvani podaci o korisniku:', localStorage.getItem('userData'));
+
                 // Dodajemo spremanje sektora u localStorage
                 const userSector = data.user.sector || 'Sektor 1'; // Primjer ručnog postavljanja
                 localStorage.setItem('userSector', userSector);

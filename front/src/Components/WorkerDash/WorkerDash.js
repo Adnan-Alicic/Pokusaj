@@ -7,6 +7,7 @@ import ReportIssue from '../Report-Issue/Report-Issue';
 function WorkerDash() {
     const [tasks, setTasks] = useState([]); 
     const [role, setRole] = useState('');  // Dodano za setRole
+    const [user, setUser] = useState({ firstname: '', lastname: '', sector: '' }); // Korisnički podaci
     const [currentPage, setCurrentPage] = useState(1); // Pagination state
     const tasksPerPage = 3; // Display 3 tasks per page
     const navigate = useNavigate();
@@ -16,7 +17,13 @@ function WorkerDash() {
         setRole(userRole);
 
         if (userRole !== 'User') {
-            navigate('/'); // Ako korisnik nije radnik, preusmeri ga
+            navigate('/'); // Ako korisnik nije radnik, preusmjeri ga
+        }
+
+        const userData = JSON.parse(localStorage.getItem('userData')); // Pretpostavimo da je ulogovani korisnik sačuvan
+        console.log("Korisnički podaci iz localStorage:", userData);
+        if (userData) {
+            setUser(userData); // Postavi ime, prezime i sektor
         }
     }, [navigate]);
 
@@ -68,7 +75,7 @@ function WorkerDash() {
                 </div>
 
                 <div className='greeting-message-div'>
-                    <h2 style={{ textAlign: "center", margin: "0", color: "#224798" }}>Dobrodošao, korisnik</h2>
+                    <h2 style={{ textAlign: "center", margin: "0", color: "#224798" }}>Dobrodošao, {user.firstname} {user.lastname} ({user.sector})</h2>
                 </div>
 
                 <div className='task-heading'>
@@ -85,6 +92,8 @@ function WorkerDash() {
                                 <p><strong>Status:</strong> {task.status}</p>
                                 <Button className='btn-done'
                                     onClick={async () => {
+
+                                        console.log(`Završavanje taska sa ID-om: ${task.id}`);
                                         const response = await fetch(`http://localhost:3000/api/tasks/complete-task/${task.id}`, {
                                             method: 'PUT',
                                             headers: {
